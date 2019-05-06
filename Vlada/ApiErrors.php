@@ -7,6 +7,8 @@ class ApiErrors {
     const INPUT_ERROR = 400;
     const MODULE_ERROR = 404;
     const NOTFOUND_ERROR = 404;
+    const AUTH_ERROR = 401;
+    const RIGHT_ERROR = 403;
 }
 
 ?>

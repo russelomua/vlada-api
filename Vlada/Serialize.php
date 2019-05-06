@@ -6,16 +6,13 @@ class Serialize {
     /**
      * Recursice serialization
      * 
-     * @return Array
+     * @return array
      */
     public function serialize() {
         $return = [];
         $reflect = new \ReflectionClass($this);
 
-        foreach ($reflect->getProperties() as $prop) {
-            if (!$prop->isProtected())
-                return;
-
+        foreach ($reflect->getProperties(\ReflectionProperty::IS_PROTECTED | \ReflectionProperty::IS_PUBLIC) as $prop) {
             $param = $prop->getName();
             $value = $this->{$param};
 
@@ -28,6 +25,35 @@ class Serialize {
         return $return;
     }
 
+    /**
+     * @return string[]
+     */
+    public function paramsList() {
+        $return = [];
+        $reflect = new \ReflectionClass($this);
+
+        foreach ($reflect->getProperties(\ReflectionProperty::IS_PROTECTED | \ReflectionProperty::IS_PUBLIC) as $prop) {
+            $return[] = $prop->getName();
+        }
+        return $return;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function paramsListSQL() {
+        $return = [];
+        $reflect = new \ReflectionClass($this);
+
+        foreach ($reflect->getProperties(\ReflectionProperty::IS_PROTECTED | \ReflectionProperty::IS_PUBLIC) as $prop) {
+            $return[] = ':'.$prop->getName();
+        }
+        return $return;
+    }
+
+    /**
+     * @return array
+     */
     final public function toArray() {
         return $this->serialize();
     }

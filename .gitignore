@@ -1,4 +1,7 @@
 vendor
 composer.lock
+files/*
+
+!files/.gitkeep 
 
 .vscode-upload.json

@@ -14,6 +14,12 @@ class Api {
     public $data;
 
     /**
+     * PHP Raw input
+     * @var string
+     */
+    public $input;
+
+    /**
      * @var Array
      */
     public $action_list;
@@ -40,13 +46,18 @@ class Api {
         array_splice($this->action_list, 0, 1);
 
         $this->data = $this->load();
+        $this->input = $this->input();
         $this->getQuery();
     }
 
     private function load() {
-		$data = file_get_contents('php://input');
+		$data = $this->input();
 		$data = json_decode($data);
 		return $data;
+    }
+
+    private function input() {
+		return file_get_contents('php://input');
     }
 
     private function getQuery() {
@@ -83,7 +94,7 @@ class Api {
 		header('Access-Control-Allow-Methods: GET,POST,PUT,DELETE');
 		header('Access-Control-Allow-Credentials: false');
 		header("Access-Control-Allow-Origin: *");
-		header('Access-Control-Allow-Headers: Content-Type, X-Requested-With, Authorization');		
+		header('Access-Control-Allow-Headers: Content-Type, X-Requested-With, X-Access-Token');		
 		header("Cache-Control: no-cache, must-revalidate");
 		header("Expires: 0");
 		header('Content-Type: application/json;charset=utf-8');
@@ -96,6 +107,12 @@ class Api {
         header('Content-Type: application/json;charset=utf-8');
 		http_response_code(200);
         die();
+    }
+
+    function getToken() {
+        if (array_key_exists('HTTP_X_ACCESS_TOKEN', $_SERVER))
+            return $_SERVER['HTTP_X_ACCESS_TOKEN'];
+        return false;
     }
 }
 
