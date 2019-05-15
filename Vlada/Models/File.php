@@ -5,12 +5,20 @@ namespace Vlada\Models;
 use Vlada\Serialize;
 
 class File extends Serialize {
+    const UPLOAD_DIR = 'files';
+
+    const ALLOWED_EXT = [
+        'txt', 'rtf', // simple
+        'pdf', // adobe
+        'doc', 'xls', 'xlsx', 'docx', 'docx', // MSOffice
+        'odt', 'fodt', 'ods', 'fods', // OpenOffice
+    ];
     /**
      * @var number
      */
     public $id;
 
-    public $user_id;
+    public $order_id;
 
     public $filename;
 
@@ -22,7 +30,7 @@ class File extends Serialize {
 
     public function __construct($data)
     {
-        $params = ['id','user_id','filename', 'route', 'status', 'hash'];
+        $params = ['id','order_id','filename', 'route', 'status', 'hash'];
 
         foreach ($params as $param) {
             if (!empty($data[$param])) {

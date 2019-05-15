@@ -10,14 +10,6 @@ use Vlada\ApiResponse;
 use Vlada\ApiErrors;
 
 class Files extends ApiModule {
-    const UPLOAD_DIR = 'files';
-
-    const ALLOWED_EXT = [
-        'txt', 'rtf', // simple
-        'pdf', // adobe
-        'doc', 'xls', 'xlsx', 'docx', 'docx', // MSOffice
-        'odt', 'fodt', 'ods', 'fods', // OpenOffice
-    ];
     /**
      * @var dbFiles
      */
@@ -69,7 +61,7 @@ class Files extends ApiModule {
             "filename" => basename($_FILES['upload']['name']),
             "status" => "pending",
             "hash" => sha1_file($_FILES['upload']['tmp_name']),
-            "user_id" => $this->user->getID(),
+            "order_id" => $this->user->getID(),
         ]);
                 
         $ext = pathinfo($file->filename, PATHINFO_EXTENSION);

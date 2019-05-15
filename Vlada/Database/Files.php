@@ -10,13 +10,19 @@ class Files extends Database {
     /**
      * @return File[]
      */
-    public function Get(User $user) {
+    public function Get(User $user, $order_id = null) {
         $return = [];
-        $sql = "SELECT * FROM files WHERE user_id = :user_id";
+        $sql = "SELECT * FROM files WHERE order_id = :order_id";
+        $params = [
+            'order_id' => $order_id
+        ];
 
-        $result = $this->database->query($sql, [
-            'user_id' => $user->getID()
-        ]);
+        // if ($order_id) {
+        //     $sql .= " AND order_id = :order_id";
+        //     $params['order_id'] = $order_id;
+        // }
+
+        $result = $this->database->query($sql, $params);
 
         while($data = $result->fetch())
             $return[] = new File($data);
@@ -62,12 +68,12 @@ class Files extends Database {
      * 
      * @return bool
      */
-    public function findByHash($hash, $user_id = null) {
+    public function findByHash($hash, $order_id = null) {
         $sql = "SELECT * FROM files WHERE hash = :hash";
         $params = ['hash' => $hash];
-        if (!empty($user_id) && is_numeric($user_id)) {
-            $sql .= " AND user_id = :user_id";
-            $params['user_id'] = $user_id;
+        if (!empty($order_id) && is_numeric($order_id)) {
+            $sql .= " AND order_id = :order_id";
+            $params['order_id'] = $order_id;
         }
 
         $result = $this->database->query($sql, $params);

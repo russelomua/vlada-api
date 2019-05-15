@@ -41,6 +41,19 @@ class Serialize {
     /**
      * @return string[]
      */
+    public function updatesListSQL() {
+        $return = [];
+        $reflect = new \ReflectionClass($this);
+
+        foreach ($reflect->getProperties(\ReflectionProperty::IS_PROTECTED | \ReflectionProperty::IS_PUBLIC) as $prop) {
+            $return[] = $prop->getName().' = :'.$prop->getName();
+        }
+        return $return;
+    }
+
+    /**
+     * @return string[]
+     */
     public function paramsListSQL() {
         $return = [];
         $reflect = new \ReflectionClass($this);
