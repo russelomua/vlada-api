@@ -63,7 +63,7 @@ class Orders extends ApiModule {
                 ]);
                 break;
             case "files":
-                $files = $this->files->Get($this->user, $this->order_id);
+                $files = $this->files->Get($this->order_id);
 
                 return new ApiResponse(["data" => $files]);
                 break;

@@ -68,6 +68,9 @@ class Orders extends Database {
         return $this->getByID($order->id);
     }
 
+    /**
+     * @return Order[]
+     */
     public function getOrdersByStatus(string $status) {
         $sql = "SELECT * FROM orders WHERE status = :status ORDER BY id ASC";
 

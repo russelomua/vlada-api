@@ -5,6 +5,15 @@ namespace Vlada\Models;
 use Vlada\Serialize;
 
 class Order extends Serialize {
+    const STATUS_NEW = 'new';
+    const STATUS_PAYMENT = 'payment';
+    const STATUS_PAYED = 'payed';
+    const STATUS_PENDING = 'pending';
+    const STATUS_PRINTING = 'printing';
+    const STATUS_PENDING_DELIVERY = 'pending_delivery';
+    const STATUS_DELIVERING = 'delivering';
+    const STATUS_DONE = 'done';
+
     /**
      * @var number
 

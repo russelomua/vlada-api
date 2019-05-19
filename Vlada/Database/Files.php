@@ -10,17 +10,29 @@ class Files extends Database {
     /**
      * @return File[]
      */
-    public function Get(User $user, $order_id = null) {
+    public function Get($order_id) {
         $return = [];
-        $sql = "SELECT * FROM files WHERE order_id = :order_id";
+        $sql = "SELECT
+                    files.*,
+                    IF( pq.start IS NULL, 
+                        'pending',
+                        IF (
+                            pq.start > NOW(), 
+                            'queue', 
+                            IF(
+                                (pq.start <= NOW() AND pq.finish > NOW()), 
+                                'printing', 
+                                'done' 
+                            )
+                        )
+                    ) as status
+                FROM files 
+                LEFT JOIN printers_queue as pq
+                    ON files.id = pq.file_id
+                WHERE files.order_id = :order_id";
         $params = [
             'order_id' => $order_id
         ];
-
-        // if ($order_id) {
-        //     $sql .= " AND order_id = :order_id";
-        //     $params['order_id'] = $order_id;
-        // }
 
         $result = $this->database->query($sql, $params);
 
@@ -31,9 +43,13 @@ class Files extends Database {
     }
 
     public function Upload(File $file) {
-        $sql = "INSERT INTO files (".implode(',', $file->paramsList()).") VALUES (".implode(',', $file->paramsListSQL()).")";
+        // Костылёк с array_diff
+        $sql = "INSERT INTO files (".implode(',', array_diff($file->paramsList(), ['status'])).") VALUES (".implode(',', array_diff($file->paramsListSQL(), [':status'])).")";
+        
+        $params = $file->toArray();
+        unset($params['status']);
 
-        $this->database->query($sql, $file->toArray());
+        $this->database->query($sql, $params);
         
         $file->setID($this->database->getLastId());
 

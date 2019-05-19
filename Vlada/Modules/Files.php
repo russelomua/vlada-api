@@ -38,9 +38,9 @@ class Files extends ApiModule {
     }
 
     protected function _get() {
-        $files = $this->files->Get($this->user);
+        // $files = $this->files->Get($this->user);
 
-        return new ApiResponse(["data" => $files]);
+        // return new ApiResponse(["data" => $files]);
     }
 
     /**
@@ -72,7 +72,7 @@ class Files extends ApiModule {
         if ($this->files->findByHash($file->hash, $this->user->getID()))
             throw new \Exception("Этот файл уже загружен", ApiErrors::INPUT_ERROR);
 
-        $file->route = implode(DIRECTORY_SEPARATOR, ["", self::UPLOAD_DIR, $this->user->getID()."_".$file->hash.".".$ext]);
+        $file->route = implode(DIRECTORY_SEPARATOR, ["", File::UPLOAD_DIR, $this->user->getID()."_".$file->hash.".".$ext]);
         if (move_uploaded_file($_FILES['upload']['tmp_name'], ROOT_DIR.$file->route)) {
             $this->files->Upload($file);
         } else 
