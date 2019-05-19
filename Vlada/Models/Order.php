@@ -25,7 +25,7 @@ class Order extends Serialize {
     
     public $lon;
 
-    public $status;
+    public $status = 'new';
 
     public function __construct($data)
     {

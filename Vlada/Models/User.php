@@ -43,6 +43,13 @@ class User extends Serialize {
     static function passwordHash(string $password) {
         return strrev(md5($password))."b3p6f";
     }
+
+    /**
+     * @return bool
+     */
+    public function checkUser() {
+        return !empty($this->password) && !empty($this->name) && !empty($this->login) && !empty($this->email);
+    }
     
     public function getID() {
         return $this->id;
@@ -58,5 +65,9 @@ class User extends Serialize {
 
     public function isAdmin() {
         return $this->rule == "admin";
+    }
+
+    public function getPassword() {
+        return $this->password;
     }
 }

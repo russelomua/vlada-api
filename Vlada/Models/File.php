@@ -24,7 +24,7 @@ class File extends Serialize {
 
     public $route;
 
-    public $status;
+    public $status = 'pending';
 
     public $hash;
 

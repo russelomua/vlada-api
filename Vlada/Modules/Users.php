@@ -5,6 +5,7 @@ namespace Vlada\Modules;
 use Vlada\ApiModule;
 use Vlada\Database\Users as dbUsers;
 use Vlada\Models\User;
+use Vlada\ApiResponse;
 
 class Users extends ApiModule {
     /**
@@ -23,6 +24,7 @@ class Users extends ApiModule {
         $user = new User((array) $this->request->data);
 
         $user = $this->users->Register($user);
+        return new ApiResponse(['data' => $user->toArray()]);
     }
 }
 

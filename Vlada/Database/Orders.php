@@ -46,7 +46,7 @@ class Orders extends Database {
     }
 
     public function removeOrder(Order $order) {
-        $sql = "DELETE FROM order WHERE user_id = :user_id AND order_id = :order_id";
+        $sql = "DELETE FROM orders WHERE user_id = :user_id AND id = :order_id";
 
         $this->database->query($sql, [
             'order_id' => $order->id,
@@ -66,5 +66,18 @@ class Orders extends Database {
         $this->database->query($sql, $order->toArray());
         
         return $this->getByID($order->id);
+    }
+
+    public function getOrdersByStatus(string $status) {
+        $sql = "SELECT * FROM orders WHERE status = :status ORDER BY id ASC";
+
+        $result = $this->database->query($sql, [
+            'status' => $status
+        ]);
+
+        while($data = $result->fetch())
+            $return[] = new Order($data);
+
+        return $return;
     }
 }

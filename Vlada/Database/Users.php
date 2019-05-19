@@ -49,27 +49,23 @@ class Users extends Database {
      * @return User
      */
     public function Register(User $user) {
-        if (!$this->checkUser($user))
-            throw new \Exception("Fill all fields", ApiErrors::INPUT_ERROR);
-        if ($this->uniqueLogin($user))
-            throw new \Exception("User exist", ApiErrors::INPUT_ERROR);
+        if (!$user->checkUser())
+            throw new \Exception("fill_all_fields", ApiErrors::INPUT_ERROR);
+        if (!$this->uniqueLogin($user))
+            throw new \Exception("user_exist", ApiErrors::INPUT_ERROR);
 
-        $sql = "INSERT INTO users (".implode(',', $user->paramsList()).") VALUES (".implode(',', $user->paramsListSQL()).")";
+        
 
-        $this->database->query($sql, $user->toArray());
+        $sql = "INSERT INTO users (".implode(',', $user->paramsList()).", password) VALUES (".implode(',', $user->paramsListSQL()).", :password)";
+
+        $params = $user->toArray();
+        $params['password'] = User::passwordHash($user->getPassword());
+        
+        $this->database->query($sql, $params);
 
         $user->setID($this->database->getLastId());
         
         return $user;
-    }
-
-    /**
-     * @param User $user
-     * 
-     * @return bool
-     */
-    public function checkUser(User $user) {
-        return !empty($user->name) && !empty($user->login) && !empty($user->email);
     }
     
     /**

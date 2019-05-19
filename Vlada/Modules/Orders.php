@@ -125,15 +125,13 @@ class Orders extends ApiModule {
 
     protected function _delete() {
         $order = new Order([
-            'id' => $this->request->data->id,
+            'id' => $this->order_id,
             'user_id' => $this->user->getID()
         ]);
 
-        $order = $this->orders->removeOrder($order);
+        $this->orders->removeOrder($order);
 
-        return new ApiResponse([
-            "data"=> $order->toArray()
-        ]);
+        return new ApiResponse();
     }
 }
 
