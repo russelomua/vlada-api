@@ -52,5 +52,21 @@ foreach ($orders as $order) {
     $dbOrders->updateOrder($order);
 }
 
+$orders = $dbOrders->getOrdersByStatus(Order::STATUS_PRINTING);
+echo "Found ".count($orders)." printing orders\n";
+
+foreach ($orders as $order) {
+    $files = $dbFiles->Get($order->id);
+    $all = true;
+    foreach ($files as $file) {
+        if ($file->status !== File::STATUS_DONE) {
+            $all = false;
+        }
+    }
+    if ($all) {
+        $order->status = Order::STATUS_ENTER_LOCATION;
+        $dbOrders->updateOrder($order);
+    }
+}
 
 ?>
