@@ -7,6 +7,11 @@ use Vlada\Serialize;
 class File extends Serialize {
     const UPLOAD_DIR = 'files';
 
+    const STATUS_PENDING = "pending";
+    const STATUS_QUEUE = "queue";
+    const STATUS_PRINTING = "printing";
+    const STATUS_DONE = "done";
+
     const ALLOWED_EXT = [
         'txt', 'rtf', // simple
         'pdf', // adobe

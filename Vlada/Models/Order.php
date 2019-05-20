@@ -10,6 +10,7 @@ class Order extends Serialize {
     const STATUS_PAYED = 'payed';
     const STATUS_PENDING = 'pending';
     const STATUS_PRINTING = 'printing';
+    const STATUS_ENTER_LOCATION = 'enter_location';
     const STATUS_PENDING_DELIVERY = 'pending_delivery';
     const STATUS_DELIVERING = 'delivering';
     const STATUS_DONE = 'done';
