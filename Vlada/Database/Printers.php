@@ -16,8 +16,7 @@ class Printers extends Database {
             'finish' => date("Y-m-d H:i:s", $finish),
         ]);
         $sql = "INSERT INTO printers_queue (".implode(',', $queue->paramsList()).") VALUES (".implode(',', $queue->paramsListSQL()).")";
-echo $sql;
-print_r($queue->toArray());
+
         $this->database->query($sql, $queue->toArray());
     }
 
