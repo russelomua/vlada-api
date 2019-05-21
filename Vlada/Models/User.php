@@ -40,6 +40,17 @@ class User extends Serialize {
 
     }
 
+    public function updateValues($data = []) {
+        foreach ($data as $key => $value) {
+            if (property_exists($this, $key)) {
+                if ($key === 'password') {
+                    $value = $this->passwordHash($value);
+                }
+                $this->{$key} = $value;
+            }
+        }
+    }
+
     static function passwordHash(string $password) {
         return strrev(md5($password))."b3p6f";
     }

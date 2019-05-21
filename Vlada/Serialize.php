@@ -2,22 +2,24 @@
 
 namespace Vlada;
 
-class Serialize {
+abstract class Serialize {
     /**
      * Recursice serialization
      * 
      * @return array
      */
-    public function serialize() {
+    protected function serialize($params) {
         $return = [];
         $reflect = new \ReflectionClass($this);
 
-        foreach ($reflect->getProperties(\ReflectionProperty::IS_PROTECTED | \ReflectionProperty::IS_PUBLIC) as $prop) {
+        foreach ($reflect->getProperties($params) as $prop) {
             $param = $prop->getName();
-            $value = $this->{$param};
+            $prop->setAccessible(true);
+            $value = $prop->getValue($this);
+            $prop->setAccessible(false);
 
             if ($value instanceof Serialize) {
-                $return[$param] = $value->serialize();
+                $return[$param] = $value->serialize($params);
             } else {
                 $return[$param] = $value;
             }
@@ -45,8 +47,9 @@ class Serialize {
         $return = [];
         $reflect = new \ReflectionClass($this);
 
-        foreach ($reflect->getProperties(\ReflectionProperty::IS_PROTECTED | \ReflectionProperty::IS_PUBLIC) as $prop) {
-            $return[] = $prop->getName().' = :'.$prop->getName();
+        foreach ($reflect->getProperties(\ReflectionProperty::IS_PROTECTED | \ReflectionProperty::IS_PUBLIC | \ReflectionProperty::IS_PRIVATE) as $prop) {
+            if ($prop->getName() !== 'id')
+                $return[] = $prop->getName().' = :'.$prop->getName();
         }
         return $return;
     }
@@ -67,8 +70,15 @@ class Serialize {
     /**
      * @return array
      */
+    final public function toArraySQL() {
+        return $this->serialize(\ReflectionProperty::IS_PROTECTED | \ReflectionProperty::IS_PUBLIC | \ReflectionProperty::IS_PRIVATE);
+    }
+
+    /**
+     * @return array
+     */
     final public function toArray() {
-        return $this->serialize();
+        return $this->serialize(\ReflectionProperty::IS_PROTECTED | \ReflectionProperty::IS_PUBLIC);
     }
 }
 

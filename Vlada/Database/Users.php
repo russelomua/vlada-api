@@ -43,6 +43,15 @@ class Users extends Database {
         ]);
     }
 
+    public function update(User $user) {
+        $sql = "UPDATE users SET ".implode(',', $user->updatesListSQL())." WHERE id = :id";
+
+        $this->database->query($sql, $user->toArraySQL());
+        
+        return $this->getByID($user->getID());
+    }
+
+
     /**
      * @param User $user
      * 
