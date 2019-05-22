@@ -29,7 +29,6 @@ class Printers extends Database {
         } else {
             $strDate = $query->fetchColumn();
             $last = strtotime($strDate);
-            echo "now ".$now." > last ".$strDate."  ".$last."\n";
             return ($now > $last ? $now : $last);
         }
     }

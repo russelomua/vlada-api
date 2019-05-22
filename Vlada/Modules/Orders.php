@@ -9,6 +9,7 @@ use Vlada\Models\Order;
 use Vlada\Models\File;
 use Vlada\Database\Orders as dbOrders;
 use Vlada\Database\Files;
+use Vlada\Database\Drons;
 
 class Orders extends ApiModule {
     /**
@@ -66,6 +67,13 @@ class Orders extends ApiModule {
                 $files = $this->files->Get($this->order_id);
 
                 return new ApiResponse(["data" => $files]);
+                break;
+            case "delivery":
+                $drons = new Drons();
+
+                $queue = $drons->getDelivery($this->order_id);
+
+                return new ApiResponse(['data' => $queue->toArray()]);
                 break;
         }
     }

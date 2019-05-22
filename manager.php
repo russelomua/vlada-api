@@ -5,6 +5,7 @@ use Vlada\Models\File;
 use Vlada\Database\Orders;
 use Vlada\Database\Files;
 use Vlada\Database\Printers;
+use Vlada\Database\Drons;
 
 include_once("./config.php");
 include_once(ROOT_DIR."/vendor/autoload.php");
@@ -15,6 +16,7 @@ $database = new MySQL(DB_HOST, DB_USER, DB_PASSWORD, DB_DB);
 $dbOrders = new Orders();
 $dbFiles = new Files();
 $dbPrinters = new Printers();
+$dbDrons = new Drons();
 
 /**
  * Process pediding orders
@@ -69,4 +71,30 @@ foreach ($orders as $order) {
     }
 }
 
+$orders = $dbOrders->getOrdersByStatus(Order::STATUS_PENDING_DELIVERY);
+echo "Found ".count($orders)." ready to delivering orders\n";
+
+if (count($orders) > 0) {
+    $order = $orders[0];
+    if ($dbDrons->getQueueLast() <= time()) {
+        $dbDrons->addQueue($order);
+        echo "Order ".$order->id." Added to queue\n";
+    
+        $order->status = Order::STATUS_DELIVERING;
+        $dbOrders->updateOrder($order);
+    }
+}
+
+$orders = $dbOrders->getOrdersByStatus(Order::STATUS_DELIVERING);
+echo "Found ".count($orders)." ready to delivering orders\n";
+
+foreach ($orders as $order) {
+    echo "Order ".$order->id;
+    if ($dbDrons->checkStatus($order->id)) {
+        $order->status = Order::STATUS_DONE;
+        $dbOrders->updateOrder($order);
+        echo " - delivered";
+    }
+    echo "\n";
+}
 ?>

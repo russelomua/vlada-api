@@ -34,11 +34,7 @@ class Users extends ApiModule {
         unset($data['id']);
         unset($data['rule']);
 
-        error_log(json_encode($this->user->getPassword()));
-        
         $this->user->updateValues($data);
-        
-        error_log(json_encode($this->user->getPassword()));
 
         $user = $this->users->update($this->user);
         return new ApiResponse(['data' => $user->toArray()]);
