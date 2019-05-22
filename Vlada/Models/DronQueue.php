@@ -7,7 +7,7 @@ class DronQueue extends Serialize {
     /**
      * Metr per second
      */
-    const DRON_SPEED = 500;
+    const DRON_SPEED = 400;
     const DRON_LANDING_TIME = 20;
 
     const OFFICE = [47.5043396, 34.6481833];
